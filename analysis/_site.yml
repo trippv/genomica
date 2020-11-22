@@ -12,7 +12,7 @@ navbar:
   right:
   - icon: fa-gitlab
     text: Source code
-    href: https://gitlab.com/Miguel Tripp/genomica
+    href: https://gitlab.com/MiguelTripp/genomica
 output:
   workflowr::wflow_html:
     toc: yes
