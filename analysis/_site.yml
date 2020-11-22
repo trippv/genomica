@@ -1,7 +1,7 @@
-name: "RGhybrid"
-output_dir: ../docs
+name: RGhybrid
+output_dir: ../public
 navbar:
-  title: "RGhybrid"
+  title: RGhybrid
   left:
   - text: Home
     href: index.html
@@ -9,6 +9,10 @@ navbar:
     href: about.html
   - text: License
     href: license.html
+  right:
+  - icon: fa-gitlab
+    text: Source code
+    href: https://gitlab.com/Miguel Tripp/genomica
 output:
   workflowr::wflow_html:
     toc: yes
