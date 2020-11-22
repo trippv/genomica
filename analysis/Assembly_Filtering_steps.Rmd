@@ -1,0 +1,229 @@
+---
+title: "De novo assembly filtering steps"
+author: "Miguel Tripp Valdez"
+date: "10/8/2020"
+output: 
+  html:
+      toc: true #replace to true for html
+      toc_depth: 3 #uncomment for html
+      #theme: cerulean #uncomment for html
+      #number_section: yes #uncomment for html
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#load libraries
+library(tidyverse)
+library(gplots)
+library(viridis)
+#library(here)
+```
+
+In this document, we describe the steps for filtering the de novo assembly from pure red (*Haliotis rufescens*; RR) and hybrid abalone (*Haliotis rufescens* x *Haliotis fulgens*;RG).
+
+# Description of the libraries
+|Group  | Sample      | Library F | Library R|
+|-------|-------------|---------------|---------------------|
+|RAZ_UN | RAZ_UN_rep1 |    Trimmed_RAZ8_10_S43_L002_1P.fastq|       Trimmed_RAZ8_10_S43_L002_2P.fastq|
+|RAZ_UN | RAZ_UN_rep2 |    Trimmed_RAZ11_13_S0_L009_1P.fastq|       Trimmed_RAZ11_13_S0_L009_2P.fastq|
+RAZ_UN|  RAZ_UN_rep3  |   Trimmed_RAZ14_16_S0_L009_1P.fastq|       Trimmed_RAZ14_16_S0_L009_2P.fastq|
+RAZ_M |  RAZ_M_rep1 |     Trimmed_RAZ26_28_S46_L002_1P.fastq|      Trimmed_RAZ26_28_S46_L002_2P.fastq|
+RAZ_M |  RAZ_M_rep2 |     Trimmed_RAZ29_30_S47_L002_1P.fastq  |    Trimmed_RAZ29_30_S47_L002_2P.fastq|
+RAZ_M|   RAZ_M_rep3|      Trimmed_RAZ31_32_S0_L009_1P.fastq|       Trimmed_RAZ31_32_S0_L009_2P.fastq|
+RR_M|    RR_M_rep1|       Trimmed_RR51_53_S0_L009_1P.fastq|        Trimmed_RR51_53_S0_L009_2P.fastq|
+RR_M|    RR_M_rep2|       Trimmed_RR54_56_S50_L002_1P.fastq|       Trimmed_RR54_56_S50_L002_2P.fastq|
+RR_M|    RR_M_rep3|       Trimmed_RR57_59_S51_L002_1P.fastq|       Trimmed_RR57_59_S51_L002_2P.fastq|
+RR_UN|   RR_UN_rep1|      Trimmed_RR87_89_S0_L009_1P.fastq|        Trimmed_RR87_89_S0_L009_2P.fastq|
+RR_UN|   RR_UN_rep2|      Trimmed_RR90_92_S53_L002_1P.fastq|       Trimmed_RR90_92_S53_L002_2P.fastq|
+RR_UN|   RR_UN_rep3|      Trimmed_RR93_95_S0_L009_1P.fastq|        Trimmed_RR93_95_S0_L009_2P.fastq|
+|    | ||||
+: Abalone libraries
+
+# Trinity de novo assembly
+
+For the *de novo* assembly, we used Trinity v 2.4.0 including all RR and RG libraries. We used the dafult parameters except the **no\_bowtie** option.
+
+# Filtering step for the assembly
+
+Filtering steps were as follows:
+
+1.  TPM filtering: Abundance estimations was made with RSEM using all libraries and the raw assembly. Therefore, a filtering step was applied to filter-out all transcripts with a TPM values \< 1.
+2.  CD-HIT: CD-HIT was used to cluster all contigs with an identity threshold of **95%**
+
+The resulting assembly (CDHIT\_TPM\_filter) was compared with the following:
+
+-   **Raw\_assembly**: The initial assembly resulting from Trinity
+-   **good\_Trinity**: The resulting contigs from running *TRANSRATE* in the Raw assebly.
+-   **TPM\_filter**: First step of the filtering process. Contigs with TPM \< 1 were filtered out
+
+# Results
+
+```{r Res table, echo= FALSE, message= FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+Res_fitler <- read_csv("data/Filtered_assembly_stats.csv") %>% 
+  pivot_longer(names_to = "Assembly", -Parameter) %>% 
+  mutate(Assembly = factor(Assembly, level = c("Raw_assembly",
+                                               "good_Trinity",
+                                               "TPM_filter",
+                                               "CDHIT_TPM_filter")))
+```
+
+## Number of transcripts
+
+```{r n_transcripts, echo = FALSE, fig.height = 8, fig.width = 12, fig.align = "center", fig.dim= 2}
+n_transcrpts <- Res_fitler %>% 
+  filter(Parameter == "n_transcripts") %>% 
+  ggplot(., aes(x = Assembly, y = value, fill = Assembly))+
+  geom_col()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "n contigs", title = "Number of contigs")+
+  scale_y_continuous(labels = scales::comma)+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+n_transcrpts
+```
+
+## Number of Trinity "genes"
+
+```{r n_genes, echo = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+n_genes <- Res_fitler %>% 
+  filter(Parameter == "n_genes") %>% 
+  ggplot(., aes(x = Assembly, y = value, fill = Assembly))+
+  geom_col()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "n genes", title = "Number of genes")+
+  scale_y_continuous(labels = scales::comma)+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+n_genes
+```
+
+## Total assembled bases
+
+```{r assembled_bases, echo = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+assembled_bases <- Res_fitler %>% 
+  filter(Parameter == "Total_assembled_bases") %>% 
+  ggplot(., aes(x = Assembly, y = value, fill = Assembly))+
+  geom_col()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "n bases", title = "Total assembled bases")+
+  scale_y_continuous(labels = scales::comma)+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+assembled_bases
+```
+
+## uncovered contigs
+Is the he number of contigs that contain at least one base with no read coverage
+
+```{r uncovered_contigs, echo = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+uncovered <- Res_fitler %>% 
+  filter(Parameter == "Uncovered_contigs") %>% 
+  ggplot(., aes(x = Assembly, y = value, fill = Assembly))+
+  geom_col()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "n contigs", title = "Uncovered contigs")+
+  scale_y_continuous(labels = scales::comma)+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+uncovered
+```
+
+## Transrate score
+
+The assembly score allows you to compare two or more assemblies made with the same reads. The score is designed so that an increased score is very likely to correspond to an assembly that is more biologically accurate[1](https://hibberdlab.com/transrate/metrics.html).
+
+```{r, echo = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+transrate_score <- Res_fitler %>% 
+  filter(Parameter == "Transrate_score") %>% 
+  ggplot(., aes(x = Assembly, y = value, fill = Assembly))+
+  geom_col()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "score", title = "Transrate score")+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+transrate_score
+```
+
+## transrate segmented contigs
+
+Is the number of contigs that have >=50% estimated chance of being segmented
+
+```{r, echo = FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+transrate_segmented <- Res_fitler %>% 
+  filter(Parameter == "Transrate_segmented_contigs") %>% 
+  ggplot(., aes(x = Assembly, y = value, fill = Assembly))+
+  geom_col()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "n contigs", title = "Segmented contigs")+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+transrate_segmented
+```
+
+
+## BUSCO
+
+### BUSCO results for Meatzoa database
+
+BUSCO uses sequence profiles embedded in lineage-specific datasets to assess the orthology status of predicted genes in the species under analysis. These consensus sequences are derived from Hidden Markov Model (HMM) profiles built from multiple sequence alignments of orthologs selected from OrthoDB and capture the conserved alignable amino acids across the species set, reducing any potential species bias that would result from pairwise alignments toward original sequences[2](https://link.springer.com/protocol/10.1007/978-1-4939-9173-0_14).
+BUSCO produces a report for each of the three modes of assessment using the same scoring scheme. Expected BUSCO genes can fall into different categories: C:complete [S:single-copy, D:duplicated], F:fragmented, and M:missing. These are reported as absolute numbers as well as percentage of the total BUSCO genes (n:) included in the dataset. To judge whether a score is satisfying, the user will have to consider the type of sequence first. A very good genome assembly should contain all BUSCO genes that were not lost during the evolution of the species, which cannot be precisely defined.
+
+Non-model genome projects commonly report BUSCO scores ranging from 50% up to 95% complete, depending on the challenge posed by the species’ biology (e.g., genome size, amount of repetitive elements) and its taxonomic position.
+
+>The duplication of a few BUSCO genes in a genome is compatible with a biological reality, as their evolution under single copy may be relaxed in some sublineages and the fact that we allowed duplications in up to 10% of the species when defining BUSCO markers [7]. However, a high duplication rate in a genome could denote a potential assembly of different haplotypes, a recent whole genome duplication [20], or technical artifacts that will have to be investigated. As mentioned earlier, the duplication rate of transcriptomes and annotated gene sets unfiltered for isoforms may be considerably higher. In some situation, the user will want to filter these out to decrease the duplication rate down to values expected in a genome. A high rate of fragmented BUSCO genes indicates issues in the sequencing and assembly process or the inability of the annotation pipeline to fully capture the complexity of some gene models. Turning fragmented BUSCO genes into complete is a good indicator of a significant improvement of the quality of an assembly, especially when supported by changes in other metrics such as N50.
+
+
+```{r Busco_MET, echo = FALSE,fig.height = 8, fig.width = 12, fig.align = "center"}
+Busco_metazoa <- Res_fitler %>% 
+  filter(Assembly != "TPM_filter") %>% 
+  filter(str_detect(Parameter, "MET")) %>% 
+  mutate(Parameter = str_sub(Parameter, 11)) %>% 
+  filter(Parameter != "complete") %>% 
+  mutate(Parameter = factor(Parameter, level = c("single",
+                                                 "duplicated",
+                                                 "fragmented",
+                                                 "missing"))) %>% 
+  ggplot(., aes(x = Assembly,y = value, fill = Parameter))+
+  geom_bar(position="fill", stat="identity")+
+  coord_flip()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "Frequency", title = "BUSCOs Metazoa DB10")+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+Busco_metazoa
+```
+
+### BUSCO results for Mollusca database
+
+
+```{r Busco_MOL, echo = FALSE,fig.height = 8, fig.width = 12, fig.align = "center"}
+Busco_mollusca <- Res_fitler %>% 
+  filter(Assembly != "TPM_filter") %>% 
+  filter(str_detect(Parameter, "MOL")) %>% 
+  mutate(Parameter = str_sub(Parameter, 11)) %>% 
+  filter(Parameter != "complete") %>% 
+  mutate(Parameter = factor(Parameter, level = c("single",
+                                                 "duplicated",
+                                                 "fragmented",
+                                                 "missing"))) %>% 
+  ggplot(., aes(x = Assembly,y = value, fill = Parameter))+
+  geom_bar(position="fill", stat="identity")+
+  coord_flip()+
+  scale_fill_viridis(discrete = TRUE)+
+  labs(y = "Frequency", title = "BUSCOs Mollusca DB10")+
+  theme_bw()+
+  theme(text = element_text(size = 20))
+
+Busco_mollusca
+```
+
+Results from BUSCO demonstrate that keeping the "_good contings_" only, from using Transrate, results in a higher score but the number of BUSCOs is being reduced considerably. By using the TPM > 1 and CD-HIT, the assembly score is also high but the number of missing BUSCOs is lower and the number of duplicated BUSCOs is reduced compared to the raw assembly.
+
