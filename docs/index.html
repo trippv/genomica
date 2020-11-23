@@ -336,7 +336,7 @@ $(document).ready(function () {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-11-22
+<strong>Last updated:</strong> 2020-11-23
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -367,16 +367,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatreecd9167dbbd882dd807f1e38707bc01ee3dc9deb8targetblankcd9167da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/trippv/genomica/tree/cd9167dbbd882dd807f1e38707bc01ee3dc9deb8" target="_blank">cd9167d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatreed33f9efa7b353ee1649b1dae996d3271bec319e7targetblankd33f9efa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/trippv/genomica/tree/d33f9efa7b353ee1649b1dae996d3271bec319e7" target="_blank">d33f9ef</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatreecd9167dbbd882dd807f1e38707bc01ee3dc9deb8targetblankcd9167da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatreed33f9efa7b353ee1649b1dae996d3271bec319e7targetblankd33f9efa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/trippv/genomica/tree/cd9167dbbd882dd807f1e38707bc01ee3dc9deb8" target="_blank">cd9167d</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/trippv/genomica/tree/d33f9efa7b353ee1649b1dae996d3271bec319e7" target="_blank">d33f9ef</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -386,8 +386,16 @@ Ignored files:
     Ignored:    .Rproj.user/
 
 Untracked files:
+    Untracked:  code/RUN_Abundance_Matrix.slrm
+    Untracked:  code/RUN_Mapping_RSME.slrm
+    Untracked:  code/RUN_TPM_Filter.slrm
+    Untracked:  code/run_Abunamce_RSEM.slrm
     Untracked:  data/EdgeR/
     Untracked:  data/Filtered_assembly_stats.csv
+
+Unstaged changes:
+    Deleted:    analysis/Assembly_Filtering_steps.Rmd
+    Deleted:    analysis/first-analysis.Rmd
 
 </code></pre>
 <p>
@@ -426,6 +434,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/trippv/genomica/blob/d33f9efa7b353ee1649b1dae996d3271bec319e7/analysis/index.Rmd" target="_blank">d33f9ef</a>
+</td>
+<td>
+Miguel Tripp
+</td>
+<td>
+2020-11-23
+</td>
+<td>
+Publish the initial files for myproject
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/trippv/genomica/b2da8027de98aa522010dea66ccf2c7d2397903b/docs/index.html" target="_blank">b2da802</a>
+</td>
+<td>
+Miguel Tripp
+</td>
+<td>
+2020-11-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -659,7 +701,7 @@ Start workflowr project.
 <p>##Preprocessing:</p>
 <p>In the preprocessing steps of the analysis I will go from the fastq files that come off the sequencer to the PAS I will use for the rest of the analysis.</p>
 <ul>
-<li><p><a href="first-analysis.html">Fitering steps</a></p></li>
+<li><p><a href="Assembly_filtering_res.html">Fitering steps</a></p></li>
 <li><p><a href="Differential_Expression.html">Differential expression</a></p></li>
 </ul>
 
