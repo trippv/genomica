@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(gplots)
 library(viridis)
-#library(here)
+library(here)
 ```
 
 
@@ -286,3 +286,25 @@ Busco_mollusca
 
 Results from BUSCO demonstrate that keeping the "_good contings_" only, from using Transrate, results in a higher score but the number of BUSCOs is being reduced considerably. By using the TPM > 1 and CD-HIT, the assembly score is also high but the number of missing BUSCOs is lower and the number of duplicated BUSCOs is reduced compared to the raw assembly.
 
+## Use of Bowtie to align reads back to the reference transcriptome
+
+Only the Raw assembly and the filtered *CD-HIT\_TPM-filtered* assembly were used for this analysis.
+
+### Bowtie results for the Raw assembly:
+
+```{r, include=TRUE, warning= FALSE,echo = FALSE, message=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+assembly = "Filter_Assembly_RawTrinity"
+
+source(here("code", "Script_get_Bowtie_results.R"), local = knitr::knit_global())
+Bow_plot
+
+```
+
+### Bowtie results for the Fitlered assembly:
+
+```{r, include=TRUE, warning= FALSE, echo = FALSE, message=FALSE, fig.height = 8, fig.width = 12, fig.align = "center"}
+assembly = "Filter_Assembly_CD-HIT_TPMTrinity"
+source(here("code", "Script_get_Bowtie_results.R"), local = knitr::knit_global())
+Bow_plot
+
+```
