@@ -10,15 +10,23 @@ editor_options:
 
 Welcome to my research website.
 
-Este es un proyecto nuevo
+Transcriptomic profile analysis for hybrid abalone (*Haliotis fulges* x *H. rufescens*; RG) and pure abalone (*H. rufescens* x *H. rufescens*; RR)) after 90 days exposed to two different diets consisting on:
+
+-   *Macrocisystis*
+-   *Navicula + Ulva*
 
 
-##Preprocessing:
-
-In the preprocessing steps of the analysis I will go from the fastq files that come off the sequencer to the PAS I will use for the rest of the analysis. 
+# Preprocessing of the reference transcriptome
 
 * [Fitering steps](Assembly_filtering_res.html)
 
+# Differential expression analysis
+
 * [Differential expression](Differential_Expression.html)
+
+# Annotation with Trinotate
+
+* [Transcriptome annotation](Annotation_report.html)
+
 
 

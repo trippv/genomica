@@ -1,0 +1,144 @@
+---
+title: "Annotation_report"
+author: "Miguel Tripp"
+date: "2020-11-23"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+# TRINOTATE Annotation report
+
+-   We used the package TrinotateR to explore Annotation results from Trinotate.
+
+-   The used assembly was the filtered with **TPM** and **CD-HIT**
+
+## Filter Non-Eukariote sequences
+
+```{r Trinotate R, message=FALSE, warning=FALSE}
+library(trinotateR)
+library(gplots)
+library(knitr)
+library(tidyverse)
+library(here)
+
+file_good = here("data", "Annotation", "Trinotate_report.xls")
+x_good <- read_trinotate(file_good)
+
+#summary table
+kable(summary_trinotate(x_good), caption = "Table 1: summary table for all annotated transcripts")
+
+#filter only eukarioye sequences in Blastx
+x_good_nonEu <- x_good %>%
+  filter(!str_detect(sprot_Top_BLASTP_hit, "Eukaryota"))
+
+#Thereafter, with filter-out the non Eucaryote sequences
+
+x_good <- x_good[!x_good$transcript_id %in% x_good_nonEu$transcript_id, ]
+
+kable(summary_trinotate(x_good), caption = "Table 2: summary table for only eukaryote transcritps as on BlastP")
+
+```
+
+## Extract each of the Trinotate report elements
+
+```{r message= FALSE}
+#pfam <- split_pfam(x_good)
+#spfam <- summary_pfam(pfam)
+#We don´t need pfam in this paper
+
+go <- split_GO(x_good, hit = "gene_ontology_blast")
+gos <- summary_GO(go)
+
+blastx <- split_blast(x_good, "sprot_Top_BLASTX_hit") 
+sblastx <- summary_blast(blastx)
+
+blastp <- split_blast(x_good, "sprot_Top_BLASTP_hit")
+sblastp <- summary_blast(blastp)
+
+
+#we create a blastp_tophit to reteain only the hit with the lowest evalue
+blastp_topHit <- blastp %>%
+   dplyr::group_by(transcript) %>%
+  dplyr::slice(which.min(evalue)) %>%
+  ungroup 
+
+```
+
+## Taxonomy plot based on results from nucleotides and ORFs (Bastx and Blastp)
+
+```{r taxonomy,echo= FALSE}
+# ====== Taxonomic classification on BlastP top hit hits=======
+# only based on genus
+genus.p <- blastp %>% 
+  count(Genus = fct_lump(genus, n = 35)) %>% 
+  arrange(desc(n))
+
+
+# ====== Taxonomic classification on BlastX top hit hits=======
+# only based on genus
+genus.x <- blastx %>% 
+  count(Genus = fct_lump(genus, n = 35)) %>% 
+  arrange(desc(n))
+
+
+#####combined plot; blastx and blastp
+genus.x$Type <-"Transcript"
+genus.p$Type <-"ORF"
+
+plot <- rbind(genus.p, genus.x)
+
+ggplot(plot, aes(x = n, y = reorder(Genus,-n), fill = Type))+
+  geom_bar(stat="identity")+
+  theme_bw()+
+  scale_fill_manual(values = c("lightblue", "darkcyan"))+
+  #facet_grid(.~ Type)+
+  labs(y = "Taxa", x = "Number of sequences") +
+  theme(axis.text.y = element_text(hjust = 1, size = 7),
+        axis.text.x = element_text(angle = 90),
+        panel.grid = element_blank())
+
+  
+  
+```
+
+## Identity distribution of the annotated ORFs (BlastP)
+
+```{r echo = FALSE}
+iden_good <- ggplot(blastp, aes(x = identity))+
+  geom_histogram(fill = "lightblue", alpha = 0.2)+
+  geom_histogram(data = blastp_topHit, aes(x = identity), fill = "tomato", alpha = 0.2)+
+  labs(x = "Identity (%)", y = "Number of sequences", title = "Identity distribution",
+       caption = "The red histogram corresponds to Tophit BlastP result")
+iden_good
+
+```
+
+## GO distribution
+
+```{r, echo = FALSE}
+library(ggpubr)
+# ====
+plotgos <- head(gos[order(-gos$transcripts),], 75)
+
+gos_tid <- gos %>%
+  arrange(desc(transcripts)) %>%
+  dplyr::group_by(ontology) %>%
+  dplyr::slice(1:20)
+
+bar <- ggbarplot(gos_tid, "name", "transcripts",
+                 fill = "ontology", 
+                 color = "ontology",
+                 xlab = "Name",
+                 ylab = "Number of transcripts",
+                 palette = c("#00AFBB", "#E7B800", "#FC4E07"),            # jco journal color palett. see ?ggpar
+                 sort.val = "desc",           # Sort the value in dscending order
+                 sort.by.groups = TRUE,
+                 x.text.angle = 45,           # Rotate vertically x axis text
+                 title = "Top 20 ontologies",
+                 legend = "bottom",
+                 orientation = "horizontal")+
+  theme(axis.text = element_text(hjust = 1, size = 8))
+bar
+
+```
