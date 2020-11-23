@@ -13,7 +13,7 @@
 
 <meta name="date" content="2020-11-22" />
 
-<title>first-analysis</title>
+<title>Differential_Expression</title>
 
 <script src="site_libs/header-attrs-2.3/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -389,7 +389,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">first-analysis</h1>
+<h1 class="title toc-ignore">Differential_Expression</h1>
 <h4 class="author">Miguel Tripp</h4>
 <h4 class="date">2020-11-22</h4>
 
@@ -542,7 +542,7 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <div id="versions" class="tab-pane fade">
 
 <p>
-These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/first-analysis.Rmd</code>) and HTML (<code>docs/first-analysis.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>analysis/Differential_Expression.Rmd</code>) and HTML (<code>docs/Differential_Expression.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
@@ -568,44 +568,10 @@ Message
 <tbody>
 <tr>
 <td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/trippv/genomica/772d9ac8f17020dad5cadf65372e3251b6fdc932/docs/first-analysis.html" target="_blank">772d9ac</a>
-</td>
-<td>
-Miguel Tripp
-</td>
-<td>
-2020-11-22
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/trippv/genomica/5320a9e42589d83e3d261aa9a85196cf6c7a00ee/docs/first-analysis.html" target="_blank">5320a9e</a>
-</td>
-<td>
-Miguel Tripp
-</td>
-<td>
-2020-11-22
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/trippv/genomica/blob/b80c56fc325c69e5d9ceba9f73098648b262656f/analysis/first-analysis.Rmd" target="_blank">b80c56f</a>
+<a href="https://github.com/trippv/genomica/blob/f08be13639eccd0f1038c6628e5c4af402307877/analysis/Differential_Expression.Rmd" target="_blank">f08be13</a>
 </td>
 <td>
 Miguel Tripp
@@ -624,173 +590,24 @@ Add my first analysis
 </div>
 </div>
 </div>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>Texto texto texto</p>
-<p>In this document, we describe the steps for filtering the de novo assembly from pure red (<em>Haliotis rufescens</em>; RR) and hybrid abalone (<em>Haliotis rufescens</em> x <em>Haliotis fulgens</em>;RG).</p>
+<div id="differential-gene-expression-with-edger" class="section level1">
+<h1>Differential gene expression with <strong>EdgeR</strong></h1>
+<p>The differential expression analysis was performed with EdgeR following the Trinity pipeline.</p>
+<p>An exact test was used for the differential expression for each contrast. Transcritps with an FDR &lt; 0.01 and log2Fold change |&gt;| 1 were considered as deferentially expressed</p>
+<div id="mds-plot-from-the-normalized-data" class="section level2">
+<h2>MDS plot from the normalized data</h2>
+<p>TMM normalized data is used for this. This was also produced by the Trinity pipeline.</p>
+<p><img src="figure/Differential_Expression.Rmd/MDSplot-1.png" width="1152" style="display: block; margin: auto;" /></p>
 </div>
-<div id="description-of-the-libraries" class="section level1">
-<h1>Description of the libraries</h1>
-<table>
-<caption>Abalone libraries</caption>
-<colgroup>
-<col width="12%" />
-<col width="23%" />
-<col width="26%" />
-<col width="37%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Group</th>
-<th>Sample</th>
-<th>Library F</th>
-<th>Library R</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>RAZ_UN</td>
-<td>RAZ_UN_rep1</td>
-<td>Trimmed_RAZ8_10_S43_L002_1P.fastq</td>
-<td>Trimmed_RAZ8_10_S43_L002_2P.fastq</td>
-</tr>
-<tr class="even">
-<td>RAZ_UN</td>
-<td>RAZ_UN_rep2</td>
-<td>Trimmed_RAZ11_13_S0_L009_1P.fastq</td>
-<td>Trimmed_RAZ11_13_S0_L009_2P.fastq</td>
-</tr>
-<tr class="odd">
-<td>RAZ_UN</td>
-<td>RAZ_UN_rep3</td>
-<td>Trimmed_RAZ14_16_S0_L009_1P.fastq</td>
-<td>Trimmed_RAZ14_16_S0_L009_2P.fastq</td>
-</tr>
-<tr class="even">
-<td>RAZ_M</td>
-<td>RAZ_M_rep1</td>
-<td>Trimmed_RAZ26_28_S46_L002_1P.fastq</td>
-<td>Trimmed_RAZ26_28_S46_L002_2P.fastq</td>
-</tr>
-<tr class="odd">
-<td>RAZ_M</td>
-<td>RAZ_M_rep2</td>
-<td>Trimmed_RAZ29_30_S47_L002_1P.fastq</td>
-<td>Trimmed_RAZ29_30_S47_L002_2P.fastq</td>
-</tr>
-<tr class="even">
-<td>RAZ_M</td>
-<td>RAZ_M_rep3</td>
-<td>Trimmed_RAZ31_32_S0_L009_1P.fastq</td>
-<td>Trimmed_RAZ31_32_S0_L009_2P.fastq</td>
-</tr>
-<tr class="odd">
-<td>RR_M</td>
-<td>RR_M_rep1</td>
-<td>Trimmed_RR51_53_S0_L009_1P.fastq</td>
-<td>Trimmed_RR51_53_S0_L009_2P.fastq</td>
-</tr>
-<tr class="even">
-<td>RR_M</td>
-<td>RR_M_rep2</td>
-<td>Trimmed_RR54_56_S50_L002_1P.fastq</td>
-<td>Trimmed_RR54_56_S50_L002_2P.fastq</td>
-</tr>
-<tr class="odd">
-<td>RR_M</td>
-<td>RR_M_rep3</td>
-<td>Trimmed_RR57_59_S51_L002_1P.fastq</td>
-<td>Trimmed_RR57_59_S51_L002_2P.fastq</td>
-</tr>
-<tr class="even">
-<td>RR_UN</td>
-<td>RR_UN_rep1</td>
-<td>Trimmed_RR87_89_S0_L009_1P.fastq</td>
-<td>Trimmed_RR87_89_S0_L009_2P.fastq</td>
-</tr>
-<tr class="odd">
-<td>RR_UN</td>
-<td>RR_UN_rep2</td>
-<td>Trimmed_RR90_92_S53_L002_1P.fastq</td>
-<td>Trimmed_RR90_92_S53_L002_2P.fastq</td>
-</tr>
-<tr class="even">
-<td>RR_UN</td>
-<td>RR_UN_rep3</td>
-<td>Trimmed_RR93_95_S0_L009_1P.fastq</td>
-<td>Trimmed_RR93_95_S0_L009_2P.fastq</td>
-</tr>
-<tr class="odd">
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<div id="number-of-differentially-expressed-transcripts" class="section level2">
+<h2>Number of differentially expressed transcripts</h2>
+<p>Number of DET per treatment:</p>
+<p><img src="figure/Differential_Expression.Rmd/unnamed-chunk-1-1.png" width="1152" style="display: block; margin: auto;" /></p>
 </div>
-<div id="trinity-de-novo-assembly" class="section level1">
-<h1>Trinity de novo assembly</h1>
-<p>For the <em>de novo</em> assembly, we used Trinity v 2.4.0 including all RR and RG libraries. We used the dafult parameters except the <strong>no_bowtie</strong> option.</p>
-</div>
-<div id="filtering-step-for-the-assembly" class="section level1">
-<h1>Filtering step for the assembly</h1>
-<p>Filtering steps were as follows:</p>
-<ol style="list-style-type: decimal">
-<li>TPM filtering: Abundance estimations was made with RSEM using all libraries and the raw assembly. Therefore, a filtering step was applied to filter-out all transcripts with a TPM values &lt; 1.</li>
-<li>CD-HIT: CD-HIT was used to cluster all contigs with an identity threshold of <strong>95%</strong></li>
-</ol>
-<p>The resulting assembly (CDHIT_TPM_filter) was compared with the following:</p>
-<ul>
-<li><strong>Raw_assembly</strong>: The initial assembly resulting from Trinity</li>
-<li><strong>good_Trinity</strong>: The resulting contigs from running <em>TRANSRATE</em> in the Raw assebly.</li>
-<li><strong>TPM_filter</strong>: First step of the filtering process. Contigs with TPM &lt; 1 were filtered out</li>
-</ul>
-</div>
-<div id="results" class="section level1">
-<h1>Results</h1>
-<div id="number-of-transcripts" class="section level2">
-<h2>Number of transcripts</h2>
-<p><img src="figure/first-analysis.Rmd/n_transcripts-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="number-of-trinity-genes" class="section level2">
-<h2>Number of Trinity “genes”</h2>
-<p><img src="figure/first-analysis.Rmd/n_genes-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="total-assembled-bases" class="section level2">
-<h2>Total assembled bases</h2>
-<p><img src="figure/first-analysis.Rmd/assembled_bases-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="uncovered-contigs" class="section level2">
-<h2>uncovered contigs</h2>
-<p>Is the he number of contigs that contain at least one base with no read coverage</p>
-<p><img src="figure/first-analysis.Rmd/uncovered_contigs-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="transrate-score" class="section level2">
-<h2>Transrate score</h2>
-<p>The assembly score allows you to compare two or more assemblies made with the same reads. The score is designed so that an increased score is very likely to correspond to an assembly that is more biologically accurate<a href="https://hibberdlab.com/transrate/metrics.html">1</a>.</p>
-<p><img src="figure/first-analysis.Rmd/unnamed-chunk-1-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="transrate-segmented-contigs" class="section level2">
-<h2>transrate segmented contigs</h2>
-<p>Is the number of contigs that have &gt;=50% estimated chance of being segmented</p>
-<p><img src="figure/first-analysis.Rmd/unnamed-chunk-2-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="busco" class="section level2">
-<h2>BUSCO</h2>
-<div id="busco-results-for-meatzoa-database" class="section level3">
-<h3>BUSCO results for Meatzoa database</h3>
-<p>BUSCO uses sequence profiles embedded in lineage-specific datasets to assess the orthology status of predicted genes in the species under analysis. These consensus sequences are derived from Hidden Markov Model (HMM) profiles built from multiple sequence alignments of orthologs selected from OrthoDB and capture the conserved alignable amino acids across the species set, reducing any potential species bias that would result from pairwise alignments toward original sequences<a href="https://link.springer.com/protocol/10.1007/978-1-4939-9173-0_14">2</a>. BUSCO produces a report for each of the three modes of assessment using the same scoring scheme. Expected BUSCO genes can fall into different categories: C:complete [S:single-copy, D:duplicated], F:fragmented, and M:missing. These are reported as absolute numbers as well as percentage of the total BUSCO genes (n:) included in the dataset. To judge whether a score is satisfying, the user will have to consider the type of sequence first. A very good genome assembly should contain all BUSCO genes that were not lost during the evolution of the species, which cannot be precisely defined.</p>
-<p>Non-model genome projects commonly report BUSCO scores ranging from 50% up to 95% complete, depending on the challenge posed by the species’ biology (e.g., genome size, amount of repetitive elements) and its taxonomic position.</p>
-<blockquote>
-<p>The duplication of a few BUSCO genes in a genome is compatible with a biological reality, as their evolution under single copy may be relaxed in some sublineages and the fact that we allowed duplications in up to 10% of the species when defining BUSCO markers [7]. However, a high duplication rate in a genome could denote a potential assembly of different haplotypes, a recent whole genome duplication [20], or technical artifacts that will have to be investigated. As mentioned earlier, the duplication rate of transcriptomes and annotated gene sets unfiltered for isoforms may be considerably higher. In some situation, the user will want to filter these out to decrease the duplication rate down to values expected in a genome. A high rate of fragmented BUSCO genes indicates issues in the sequencing and assembly process or the inability of the annotation pipeline to fully capture the complexity of some gene models. Turning fragmented BUSCO genes into complete is a good indicator of a significant improvement of the quality of an assembly, especially when supported by changes in other metrics such as N50.</p>
-</blockquote>
-<p><img src="figure/first-analysis.Rmd/Busco_MET-1.png" width="1152" style="display: block; margin: auto;" /></p>
-</div>
-<div id="busco-results-for-mollusca-database" class="section level3">
-<h3>BUSCO results for Mollusca database</h3>
-<p><img src="figure/first-analysis.Rmd/Busco_MOL-1.png" width="1152" style="display: block; margin: auto;" /></p>
-<p>Results from BUSCO demonstrate that keeping the “<em>good contings</em>” only, from using Transrate, results in a higher score but the number of BUSCOs is being reduced considerably. By using the TPM &gt; 1 and CD-HIT, the assembly score is also high but the number of missing BUSCOs is lower and the number of duplicated BUSCOs is reduced compared to the raw assembly.</p>
+<div id="heatmap-of-differentially-expressed-transcripts" class="section level2">
+<h2>Heatmap of differentially expressed transcripts</h2>
+<pre><code>[1] 4728</code></pre>
+<p><img src="figure/Differential_Expression.Rmd/heatmap-1.png" width="1152" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -798,7 +615,6 @@ Add my first analysis
 </button>
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
-<pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 4.0.0 (2020-04-24)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 Running under: Windows 10 x64 (build 19041)
@@ -816,21 +632,21 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] viridis_0.5.1     viridisLite_0.3.0 gplots_3.0.3      forcats_0.5.0    
- [5] stringr_1.4.0     dplyr_1.0.0       purrr_0.3.4       readr_1.3.1      
- [9] tidyr_1.1.0       tibble_3.0.1      ggplot2_3.3.1     tidyverse_1.3.0  
-[13] workflowr_1.6.2  
+ [1] edgeR_3.30.3       limma_3.44.1       forcats_0.5.0      stringr_1.4.0     
+ [5] dplyr_1.0.0        purrr_0.3.4        readr_1.3.1        tidyr_1.1.0       
+ [9] tibble_3.0.1       ggplot2_3.3.1      tidyverse_1.3.0    patchwork_1.0.0   
+[13] knitr_1.29         RColorBrewer_1.1-2 gplots_3.0.3       workflowr_1.6.2   
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.4.6       lubridate_1.7.8    lattice_0.20-41    gtools_3.8.2      
- [5] assertthat_0.2.1   rprojroot_1.3-2    digest_0.6.25      R6_2.4.1          
- [9] cellranger_1.1.0   backports_1.1.7    reprex_0.3.0       evaluate_0.14     
-[13] httr_1.4.1         pillar_1.4.4       rlang_0.4.6        readxl_1.3.1      
-[17] rstudioapi_0.11    gdata_2.18.0       whisker_0.4        blob_1.2.1        
-[21] rmarkdown_2.3      labeling_0.3       munsell_0.5.0      broom_0.5.6       
-[25] compiler_4.0.0     httpuv_1.5.4       modelr_0.1.8       xfun_0.16         
-[29] pkgconfig_2.0.3    htmltools_0.4.0    tidyselect_1.1.0   gridExtra_2.3     
-[33] fansi_0.4.1        crayon_1.3.4       dbplyr_1.4.4       withr_2.2.0       
+ [1] locfit_1.5-9.4     Rcpp_1.0.4.6       lubridate_1.7.8    lattice_0.20-41   
+ [5] gtools_3.8.2       assertthat_0.2.1   rprojroot_1.3-2    digest_0.6.25     
+ [9] R6_2.4.1           cellranger_1.1.0   backports_1.1.7    reprex_0.3.0      
+[13] evaluate_0.14      httr_1.4.1         pillar_1.4.4       rlang_0.4.6       
+[17] readxl_1.3.1       rstudioapi_0.11    gdata_2.18.0       whisker_0.4       
+[21] blob_1.2.1         rmarkdown_2.3      labeling_0.3       munsell_0.5.0     
+[25] broom_0.5.6        compiler_4.0.0     httpuv_1.5.4       modelr_0.1.8      
+[29] xfun_0.16          pkgconfig_2.0.3    htmltools_0.4.0    tidyselect_1.1.0  
+[33] fansi_0.4.1        withr_2.2.0        crayon_1.3.4       dbplyr_1.4.4      
 [37] later_1.0.0        bitops_1.0-6       grid_4.0.0         nlme_3.1-147      
 [41] jsonlite_1.6.1     gtable_0.3.0       lifecycle_0.2.0    DBI_1.1.0         
 [45] git2r_0.27.1       magrittr_1.5       scales_1.1.1       KernSmooth_2.23-16
@@ -838,8 +654,7 @@ loaded via a namespace (and not attached):
 [53] promises_1.1.0     xml2_1.3.2         ellipsis_0.3.1     generics_0.0.2    
 [57] vctrs_0.3.0        tools_4.0.0        glue_1.4.1         hms_0.5.3         
 [61] yaml_2.2.1         colorspace_1.4-1   caTools_1.18.0     rvest_0.3.5       
-[65] knitr_1.29         haven_2.3.1       </code></pre>
-</div>
+[65] haven_2.3.1       </code></pre>
 </div>
 </div>
 </div>
