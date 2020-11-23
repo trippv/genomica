@@ -18,7 +18,7 @@ library(viridis)
 #library(here)
 ```
 
-Texto texto texto 
+
 
 In this document, we describe the steps for filtering the de novo assembly from pure red (*Haliotis rufescens*; RR) and hybrid abalone (*Haliotis rufescens* x *Haliotis fulgens*;RG).
 
@@ -49,7 +49,66 @@ For the *de novo* assembly, we used Trinity v 2.4.0 including all RR and RG libr
 Filtering steps were as follows:
 
 1.  TPM filtering: Abundance estimations was made with RSEM using all libraries and the raw assembly. Therefore, a filtering step was applied to filter-out all transcripts with a TPM values \< 1.
+
+```{bash TPM_filter, eval = FALSE}
+#!/bin/bash
+#SBATCH -p cicese
+#SBATCH --job-name=TPM_filter
+#SBATCH --output=TPM_filter-%j.log
+#SBATCH --error=TPM_filter-%j.err
+#SBATCH -N 1
+#SBATCH --mem=100GB
+#SBATCH --ntasks-per-node=24
+#SBATCH -t 6-00:00:00
+#SBATCH --exclusive
+
+export PATH=$PATH:/LUSTRE/apps/bioinformatica/bowtie2
+export PATH=$PATH:/LUSTRE/bioinformatica_data/genomica_funcional/bin/RSEM
+
+UTIL=/LUSTRE/apps/bioinformatica/trinityrnaseq-2.4.0/util
+
+cd $SLURM_SUBMIT_DIR
+$UTIL/filter_low_expr_transcripts.pl \
+--matrix RSEM.isoform.TMM.EXPR.matrix \
+--transcripts Trinity.fasta \
+--min_expr_any 1 \
+--gene_to_trans_map Trinity.fasta.gene_trans_map
+
+exit 0
+
+```
+
+
+
 2.  CD-HIT: CD-HIT was used to cluster all contigs with an identity threshold of **95%**
+
+
+```{bash cd-hit, eval = FALSE}
+#!/bin/bash
+#SBATCH -p cicese
+#SBATCH --job-name=CD-HIT
+#SBATCH --output=cd-hit-%j.log
+#SBATCH --error=cd-hit-%j.err
+#SBATCH -N 1
+#SBATCH --mem=100GB
+#SBATCH --ntasks-per-node=24
+#SBATCH -t 6-00:00:00
+#SBATCH --exclusive
+
+CDHIT=/LUSTRE/bioinformatica_data/genomica_funcional/Tripp/apps/cd-hit
+
+# $1 ensambele
+
+
+cd $SLURM_SUBMIT_DIR
+
+$CDHIT/cd-hit-est -i $1 -o CD-HIT_TPM_Trinity.fasta -n 8 -b 3 -c 0.95
+
+exit 0
+
+
+```
+
 
 The resulting assembly (CDHIT\_TPM\_filter) was compared with the following:
 
