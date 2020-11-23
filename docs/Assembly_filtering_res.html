@@ -507,16 +507,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatreed33f9efa7b353ee1649b1dae996d3271bec319e7targetblankd33f9efa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/trippv/genomica/tree/d33f9efa7b353ee1649b1dae996d3271bec319e7" target="_blank">d33f9ef</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatree80c5a9f15b08094e0f4b94c712f5c9c7f9458963targetblank80c5a9fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/trippv/genomica/tree/80c5a9f15b08094e0f4b94c712f5c9c7f9458963" target="_blank">80c5a9f</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatreed33f9efa7b353ee1649b1dae996d3271bec319e7targetblankd33f9efa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomtrippvgenomicatree80c5a9f15b08094e0f4b94c712f5c9c7f9458963targetblank80c5a9fa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/trippv/genomica/tree/d33f9efa7b353ee1649b1dae996d3271bec319e7" target="_blank">d33f9ef</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/trippv/genomica/tree/80c5a9f15b08094e0f4b94c712f5c9c7f9458963" target="_blank">80c5a9f</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -527,6 +527,7 @@ Ignored files:
 
 Untracked files:
     Untracked:  code/RUN_Abundance_Matrix.slrm
+    Untracked:  code/RUN_CDHIT_filter.slrm
     Untracked:  code/RUN_Mapping_RSME.slrm
     Untracked:  code/RUN_TPM_Filter.slrm
     Untracked:  code/run_Abunamce_RSEM.slrm
@@ -579,6 +580,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/trippv/genomica/blob/80c5a9f15b08094e0f4b94c712f5c9c7f9458963/analysis/Assembly_filtering_res.Rmd" target="_blank">80c5a9f</a>
+</td>
+<td>
+Miguel Tripp
+</td>
+<td>
+2020-11-23
+</td>
+<td>
+Publish the initial files for myproject
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/trippv/genomica/eb7569b7034e74cc56d9ac36e7b1f70cf2dfc227/docs/Assembly_filtering_res.html" target="_blank">eb7569b</a>
+</td>
+<td>
+Miguel Tripp
+</td>
+<td>
+2020-11-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/trippv/genomica/blob/d33f9efa7b353ee1649b1dae996d3271bec319e7/analysis/Assembly_filtering_res.Rmd" target="_blank">d33f9ef</a>
 </td>
 <td>
@@ -600,7 +635,6 @@ Publish the initial files for myproject
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Texto texto texto</p>
 <p>In this document, we describe the steps for filtering the de novo assembly from pure red (<em>Haliotis rufescens</em>; RR) and hybrid abalone (<em>Haliotis rufescens</em> x <em>Haliotis fulgens</em>;RG).</p>
 </div>
 <div id="description-of-the-libraries" class="section level1">
@@ -712,8 +746,57 @@ Publish the initial files for myproject
 <p>Filtering steps were as follows:</p>
 <ol style="list-style-type: decimal">
 <li>TPM filtering: Abundance estimations was made with RSEM using all libraries and the raw assembly. Therefore, a filtering step was applied to filter-out all transcripts with a TPM values &lt; 1.</li>
+</ol>
+<pre class="bash"><code>#!/bin/bash
+#SBATCH -p cicese
+#SBATCH --job-name=TPM_filter
+#SBATCH --output=TPM_filter-%j.log
+#SBATCH --error=TPM_filter-%j.err
+#SBATCH -N 1
+#SBATCH --mem=100GB
+#SBATCH --ntasks-per-node=24
+#SBATCH -t 6-00:00:00
+#SBATCH --exclusive
+
+export PATH=$PATH:/LUSTRE/apps/bioinformatica/bowtie2
+export PATH=$PATH:/LUSTRE/bioinformatica_data/genomica_funcional/bin/RSEM
+
+UTIL=/LUSTRE/apps/bioinformatica/trinityrnaseq-2.4.0/util
+
+cd $SLURM_SUBMIT_DIR
+$UTIL/filter_low_expr_transcripts.pl \
+--matrix RSEM.isoform.TMM.EXPR.matrix \
+--transcripts Trinity.fasta \
+--min_expr_any 1 \
+--gene_to_trans_map Trinity.fasta.gene_trans_map
+
+exit 0
+</code></pre>
+<ol start="2" style="list-style-type: decimal">
 <li>CD-HIT: CD-HIT was used to cluster all contigs with an identity threshold of <strong>95%</strong></li>
 </ol>
+<pre class="bash"><code>#!/bin/bash
+#SBATCH -p cicese
+#SBATCH --job-name=CD-HIT
+#SBATCH --output=cd-hit-%j.log
+#SBATCH --error=cd-hit-%j.err
+#SBATCH -N 1
+#SBATCH --mem=100GB
+#SBATCH --ntasks-per-node=24
+#SBATCH -t 6-00:00:00
+#SBATCH --exclusive
+
+CDHIT=/LUSTRE/bioinformatica_data/genomica_funcional/Tripp/apps/cd-hit
+
+# $1 ensambele
+
+
+cd $SLURM_SUBMIT_DIR
+
+$CDHIT/cd-hit-est -i $1 -o CD-HIT_TPM_Trinity.fasta -n 8 -b 3 -c 0.95
+
+exit 0
+</code></pre>
 <p>The resulting assembly (CDHIT_TPM_filter) was compared with the following:</p>
 <ul>
 <li><strong>Raw_assembly</strong>: The initial assembly resulting from Trinity</li>
