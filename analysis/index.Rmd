@@ -19,4 +19,6 @@ In the preprocessing steps of the analysis I will go from the fastq files that c
 
 * [Fitering steps](first-analysis.html)
 
+* [Differential expression](Differential_Expression.html)
+
 
