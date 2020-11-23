@@ -1,5 +1,5 @@
 ---
-title: "first-analysis"
+title: "Assemby filtering"
 author: "Miguel Tripp"
 date: "2020-11-22"
 output: workflowr::wflow_html
