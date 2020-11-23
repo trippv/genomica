@@ -20,6 +20,8 @@ library(viridis)
 #library(here)
 ```
 
+Texto texto texto 
+
 In this document, we describe the steps for filtering the de novo assembly from pure red (*Haliotis rufescens*; RR) and hybrid abalone (*Haliotis rufescens* x *Haliotis fulgens*;RG).
 
 # Description of the libraries
